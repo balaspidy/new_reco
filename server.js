@@ -10,8 +10,8 @@ const pptr = require('puppeteer');
 
   const actions = [];
 
-  // Function to handle redirect event
-  await page.exposeFunction('redirectEvent', async(info) => {
+   // Function to handle redirect event
+   await page.exposeFunction('redirectEvent', async(info) => {
     if (info.targetId == 'submit') {
         console.log(info.targetValue);
         await page.goto(info.targetValue);
@@ -23,6 +23,7 @@ const pptr = require('puppeteer');
         targetValue: document.getElementById("url").value
     }), true /* capture */);
   });
+
   await page.exposeFunction('reportEvent', info => {
     console.log(info);
     actions.push(info);
@@ -31,7 +32,15 @@ const pptr = require('puppeteer');
     document.addEventListener('click', e => reportEvent({targetName: e.target.baseURI, eventType: 'click'}), true /* capture */);
   });
 
-  // Function to handle scroll event
+  await page.exposeFunction('reportEvent1', info => {
+    console.log(info);
+    actions.push(info);
+  });
+  await page.evaluateOnNewDocument(() => {
+    document.addEventListener('input', f => reportEvent1({targetName: f.target.value, eventType: 'input'}), true /* capture */);
+  });
+
+
   await page.exposeFunction('scrollEvent', info => {
     console.log(info);
     actions.push(info);
@@ -45,21 +54,7 @@ const pptr = require('puppeteer');
       });
     });
   });
+  
 
-  // Function to handle search event
-  await page.exposeFunction('searchEvent', info => {
-    console.log(info);
-    actions.push(info);
-  });
-  await page.evaluateOnNewDocument(() => {
-    const searchInput = document.getElementById('searchBar'); // Replace 'searchBar' with the actual ID of your search bar input element
-    searchInput.addEventListener('input', () => {
-      searchEvent({
-        eventType: 'search', 
-        searchQuery: searchInput.value,
-      });
-    });
-  });
-
-  await page.goto('file://E:/final pro/public/recording.html');
+  await page.goto('file:///Users/balamurug.palanisamy/Git_sneha/new_reco/index.html');
 })();
