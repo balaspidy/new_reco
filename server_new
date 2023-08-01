@@ -1,12 +1,8 @@
 // puppeteerScript.js
 const puppeteer = require('puppeteer');
 
-async function runPuppeteerScript() {
+async function runPuppeteerScript(page) {
   try {
-    const browser = await puppeteer.launch({
-      headless: false,
-    });
-    const page = await browser.pages();
 
     const actions = [];
 
@@ -61,3 +57,9 @@ async function runPuppeteerScript() {
   }
 }
 module.exports = runPuppeteerScript;
+
+
+
+
+
+
