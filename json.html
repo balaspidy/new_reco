@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Logger</title>
+</head>
+<body>
+  <button id="startRecording">Start Recording</button>
+  <div id="logContainer"></div>
+  <script>
+    // Function to print messages to the log container
+    function printToConsole(message) {
+      const logContainer = document.getElementById('logContainer');
+      const messageElement = document.createElement('p');
+      messageElement.textContent = message;
+      logContainer.appendChild(messageElement);
+    }
+
+    // Function to handle button click and start recording
+    function startRecording() {
+      // Clear the log container before starting recording
+      document.getElementById('logContainer').innerHTML = '';
+
+      // Call the function from Puppeteer context to start recording
+      startPuppeteerScript();
+    }
+
+    document.getElementById('startRecording').addEventListener('click', startRecording);
+
+    // Function to handle messages from Puppeteer script
+    function handlePuppeteerMessage(message) {
+      // Call the function to print messages to the log container
+      printToConsole(message);
+    }
+
+    // Expose the handlePuppeteerMessage function to Puppeteer script
+    window.handlePuppeteerMessage = handlePuppeteerMessage;
+  </script>
+</body>
+</html>
