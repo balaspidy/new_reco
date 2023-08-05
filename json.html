@@ -1,41 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Event Logger</title>
+  <title>Recording Page</title>
+  <!-- Add your other stylesheets or script files as needed -->
 </head>
 <body>
-  <button id="startRecording">Start Recording</button>
+  <!-- Your front-end content goes here -->
+  <h1>Recording Page</h1>
+  
+  
+  <button id="baba">View JSON</button>
+  
+  <!-- Log container to display messages -->
   <div id="logContainer"></div>
+  
+  <!-- Add your other HTML elements here -->
+
   <script>
-    // Function to print messages to the log container
-    function printToConsole(message) {
-      const logContainer = document.getElementById('logContainer');
-      const messageElement = document.createElement('p');
-      messageElement.textContent = message;
-      logContainer.appendChild(messageElement);
-    }
+   // Array to store all the JSON messages
+const messagesList = [];
 
-    // Function to handle button click and start recording
-    function startRecording() {
-      // Clear the log container before starting recording
-      document.getElementById('logContainer').innerHTML = '';
+// Function to append the JSON data to the log container and store it in messagesList
+function printToConsole(message) {
+  // Store the message as JSON in the messagesList array
+  messagesList.push(JSON.parse(message));
+}
 
-      // Call the function from Puppeteer context to start recording
-      startPuppeteerScript();
-    }
+// Function to display the stored JSON data when the "View JSON" button is clicked
+function displayMessages() {
+  const logContainer = document.getElementById('logContainer');
+  // Clear the log container first
+  logContainer.innerHTML = '';
 
-    document.getElementById('startRecording').addEventListener('click', startRecording);
+  // Create an unordered list to display the messages as a list
+  const ul = document.createElement('ul');
 
-    // Function to handle messages from Puppeteer script
-    function handlePuppeteerMessage(message) {
-      // Call the function to print messages to the log container
-      printToConsole(message);
-    }
+  // Create and append list items for each stored message in messagesList
+  messagesList.forEach((message) => {
+    const li = document.createElement('li');
+    li.textContent = JSON.stringify(message);
+    ul.appendChild(li);
+  });
 
-    // Expose the handlePuppeteerMessage function to Puppeteer script
-    window.handlePuppeteerMessage = handlePuppeteerMessage;
+  // Append the unordered list to the log container
+  logContainer.appendChild(ul);
+}
+
+
+  
   </script>
 </body>
 </html>
