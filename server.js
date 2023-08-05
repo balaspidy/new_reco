@@ -1,65 +1,36 @@
-const pptr = require('puppeteer');
+const puppeteer = require('puppeteer');
 
-(async () => {
-  // 1. Launch browser in headful mode so that we can click around and see how
-  // script works.
-  const browser = await pptr.launch({
-    headless: false,
-  });
-  const page = await browser.newPage();
+async function runPuppeteerScript(page) {
+  try {
+    const browser = page.browser();
 
-  const actions = [];
+    const recordingPage = await browser.newPage();
+    await recordingPage.goto('file:///Users/balamurug.palanisamy/Git_sneha/new_reco/recording.html');
 
-  // Function to handle redirect event
-  await page.exposeFunction('redirectEvent', async(info) => {
-    if (info.targetId == 'submit') {
+    await recordingPage.exposeFunction('redirectEvent1', async (info) => {
+      console.log('redirectEvent1 called:', info); // Log the info to see if the function is being called
+      if (info.targetId == 'submit') {
         console.log(info.targetValue);
-        await page.goto(info.targetValue);
-    }
-  });
-  await page.evaluateOnNewDocument(() => {
-    document.addEventListener('click', e => redirectEvent({
-        targetId: e.target.getAttribute("id"),
-        targetValue: document.getElementById("url").value
-    }), true /* capture */);
-  });
-  await page.exposeFunction('reportEvent', info => {
-    console.log(info);
-    actions.push(info);
-  });
-  await page.evaluateOnNewDocument(() => {
-    document.addEventListener('click', e => reportEvent({targetName: e.target.baseURI, eventType: 'click'}), true /* capture */);
-  });
-
-  // Function to handle scroll event
-  await page.exposeFunction('scrollEvent', info => {
-    console.log(info);
-    actions.push(info);
-  });
-  await page.evaluateOnNewDocument(() => {
-    window.addEventListener('scroll', () => {
-      scrollEvent({
-        eventType: 'scroll',
-        scrollX: window.scrollX,
-        scrollY: window.scrollY,
-      });
+        await recordingPage.goto(info.targetValue);
+      }
     });
-  });
 
-  // Function to handle search event
-  await page.exposeFunction('searchEvent', info => {
-    console.log(info);
-    actions.push(info);
-  });
-  await page.evaluateOnNewDocument(() => {
-    const searchInput = document.getElementById('searchBar'); // Replace 'searchBar' with the actual ID of your search bar input element
-    searchInput.addEventListener('input', () => {
-      searchEvent({
-        eventType: 'search', 
-        searchQuery: searchInput.value,
-      });
+    await recordingPage.evaluate(() => {
+      document.addEventListener('click', e => {
+        console.log('Click event triggered:', e); // Log the event to see if the click event is being triggered
+        window.redirectEvent1({
+          targetId: e.target.getAttribute("id"),
+          targetValue: document.getElementById("url").value
+        });
+      }, true /* capture */);
     });
-  });
 
-  await page.goto('file://E:/final pro/public/recording.html');
-})();
+    // Navigate to the recording.html URL in a new tab
+
+  } catch (err) {
+    console.error('Error executing Puppeteer script:', err);
+  }
+}
+
+// Export the runPuppeteerScript function
+module.exports = runPuppeteerScript;

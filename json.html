@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Recording Page</title>
+  <!-- Add your other stylesheets or script files as needed -->
+</head>
+<body>
+  <!-- Your front-end content goes here -->
+  <h1>Recording Page</h1>
+  
+  
+  <button id="baba">View JSON</button>
+  
+  <!-- Log container to display messages -->
+  <div id="logContainer"></div>
+  
+  <!-- Add your other HTML elements here -->
+
+  <script>
+   // Array to store all the JSON messages
+const messagesList = [];
+
+// Function to append the JSON data to the log container and store it in messagesList
+function printToConsole(message) {
+  // Store the message as JSON in the messagesList array
+  messagesList.push(JSON.parse(message));
+}
+
+// Function to display the stored JSON data when the "View JSON" button is clicked
+function displayMessages() {
+  const logContainer = document.getElementById('logContainer');
+  // Clear the log container first
+  logContainer.innerHTML = '';
+
+  // Create an unordered list to display the messages as a list
+  const ul = document.createElement('ul');
+
+  // Create and append list items for each stored message in messagesList
+  messagesList.forEach((message) => {
+    const li = document.createElement('li');
+    li.textContent = JSON.stringify(message);
+    ul.appendChild(li);
+  });
+
+  // Append the unordered list to the log container
+  logContainer.appendChild(ul);
+}
+
+
+  
+  </script>
+</body>
+</html>
